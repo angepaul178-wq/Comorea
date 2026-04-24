@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMOREA - Outil de Pricing de Transfert Professionnel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(90deg, #00f5ff, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0,255,255,0.2);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 245, 255, 0.1);
+        }
+
+        .section h2 {
+            color: #00f5ff;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #8a2be2;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.8);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00f5ff;
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #00f5ff, #8a2be2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 245, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 245, 255, 0.2);
+            color: #00f5ff;
+            border: 1px solid #00f5ff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 245, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #00f5ff;
+            border-bottom-color: #00f5ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 245, 255, 0.1);
+            border-left: 4px solid #00f5ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-title {
+            color: #00f5ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            color: #8a2be2;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .result-details {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            color: #86efac;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .explanation {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 4px solid #8a2be2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .formula {
+            background: rgba(0, 245, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #00f5ff;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            color: #00f5ff;
+            font-weight: bold;
+        }
+
+        .glossary {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .glossary-item {
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            border-left: 3px solid #8a2be2;
+        }
+
+        .glossary-item strong {
+            color: #00f5ff;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            color: #fca5a5;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<header>📊 COMOREA</header>
+
+<div class="main-container">
+
+    <!-- SECTION 1: INSCRIPTION ET CALCUL -->
+    <div class="section">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'inscription')">Inscription</button>
+            <button class="tab-btn" onclick="switchTab(event, 'calcul')">Calculateur</button>
+        </div>
+
+        <!-- TAB: INSCRIPTION -->
+        <div id="inscription" class="tab-content active">
+            <h2>Créer un Compte</h2>
+            <div class="success-message" id="successMsg"></div>
+            <div class="error-message" id="errorMsg"></div>
+
+            <div class="form-group">
+                <label for="fullName">Nom Complet</label>
+                <input type="text" id="fullName" placeholder="Ex: Jean Dupont">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Professionnel</label>
+                <input type="email" id="email" placeholder="Ex: jean@entreprise.com">
+            </div>
+
+            <div class="form-group">
+                <label for="company">Nom de l'Entreprise</label>
+                <input type="text" id="company" placeholder="Ex: Acme Corp">
+            </div>
+
+            <div class="form-group">
+                <label for="sector">Secteur d'Activité</label>
+                <select id="sector">
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="manufacturing">Fabrication</option>
+                    <option value="services">Services</option>
+                    <option value="tech">Technologie</option>
+                    <option value="pharma">Pharmaceutique</option>
+                    <option value="finance">Finance</option>
+                    <option value="other">Autre</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de Passe</label>
+                <input type="password" id="password" placeholder="Minimum 8 caractères" minlength="8">
+            </div>
+
+            <div class="form-group">
+                <label for="userEmail">Votre Email (pour recevoir la confirmation)</label>
+                <input type="email" id="userEmail" placeholder="votreemail@exemple.com">
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-primary" onclick="handleRegistration()">S'Inscrire</button>
+            </div>
+        </div>
+
+        <!-- TAB: CALCULATEUR -->
+        <div id="calcul" class="tab-content">
+            <h2>Calculateur de Prix de Transfert</h2>
+            
+            <div class="form-group">
+                <label for="cost">Coût de Production (€)</label>
+                <input type="number" id="cost" placeholder="Ex: 1000" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="margin">Marge Bénéficiaire (%)</label>
+                <input type="number" id="margin" placeholder="Ex: 15" step="0.01" min="0" max="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="method">Méthode de Pricing</label>
+                <select id="method">
+                    <option value="cost-plus">Cost Plus (Coût Plus)</option>
+                    <option value="resale">Resale Price (Prix Revente)</option>
+                    <option value="profit-split">Profit Split (Partage des Bénéfices)</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-primary" onclick="calculate()">Calculer</button>
+                <button type="button" class="btn-secondary" onclick="resetCalc()">Réinitialiser</button>
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-title">💰 Prix de Transfert Calculé</div>
+                <div class="result-value" id="priceValue">-</div>
+                <div class="result-details" id="resultDetails"></div>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0,245,255,0.2);">
+                    <label for="emailRecipient">Envoyer les résultats par email :</label>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="email" id="emailRecipient" placeholder="Votre email" value="paul178paul@gmail.com" style="flex: 1;">
+                        <button type="button" class="btn-primary" onclick="sendResultsByEmail()" style="flex: 0.8;">📧 Envoyer</button>
+                    </div>
+                    <div id="emailStatus" style="margin-top: 10px; font-size: 13px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: GUIDE EDUCATIF -->
+    <div class="section">
+        <h2>📚 Comprendre les Prix de Transfert</h2>
+
+        <div class="explanation">
+            <strong>Qu'est-ce qu'un prix de transfert ?</strong><br><br>
+            Les prix de transfert sont les prix auxquels les entités liées (filiales, succursales, etc.) d'une même entreprise multinationale échangent des biens, services ou propriété intellectuelle. Ces prix sont cruciaux pour la conformité fiscale et la gestion comptable.
+        </div>
+
+        <div class="explanation">
+            <strong>Pourquoi c'est important ?</strong><br><br>
+            ✓ <span class="highlight">Conformité Fiscale</span> : Respecter les règles OCDE et nationales<br>
+            ✓ <span class="highlight">Optimisation Fiscale</span> : Maximiser les bénéfices légalement<br>
+            ✓ <span class="highlight">Documentation</span> : Justifier vos prix en cas d'audit<br>
+            ✓ <span class="highlight">Risques Réduits</span> : Éviter les pénalités et ajustements fiscaux
+        </div>
+
+        <div class="formula">
+            <strong>Formule Principale (Cost Plus) :</strong><br>
+            Prix de Transfert = Coût + (Coût × Marge %)<br>
+            <span style="font-size: 12px; margin-top: 10px; display: block;">Exemple : 1000€ + (1000€ × 15%) = 1150€</span>
+        </div>
+
+        <div class="explanation">
+            <strong>Les 3 Principales Méthodes :</strong><br><br>
+            <strong style="color: #00f5ff;">1. Cost Plus (Coût Plus)</strong><br>
+            Ajoute une marge au coût total. Idéale pour les services et biens standards.<br><br>
+
+            <strong style="color: #00f5ff;">2. Resale Price (Prix Revente)</strong><br>
+            Réduit le prix de revente d'une marge. Utilisée pour les biens revendus.<br><br>
+
+            <strong style="color: #00f5ff;">3. Profit Split (Partage des Bénéfices)</strong><br>
+            Divise les bénéfices selon les contributions. Pour les actifs hautement intangibles.
+        </div>
+
+        <div class="glossary">
+            <div class="glossary-item">
+                <strong>Entités Liées :</strong> Sociétés ayant une relation de contrôle ou d'influence directe
+            </div>
+            <div class="glossary-item">
+                <strong>Arm's Length Principle :</strong> Prix que demanderaient des entreprises indépendantes
+            </div>
+            <div class="glossary-item">
+                <strong>Bénéfice Économique :</strong> Avantage obtenu par une entreprise liée
+            </div>
+            <div class="glossary-item">
+                <strong>Documentation TP :</strong> Preuves justifiant les prix de transfert utilisés
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2024 COMOREA - Outil Professionnel de Prix de Transfert | Conformité Fiscale Internationale</p>
+</footer>
+
+<script>
+    // ========== GESTION DES ONGLETS ==========
+    function switchTab(event, tabName) {
+        event.preventDefault();
+        
+        // Masquer tous les contenus
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
+        
+        // Retirer active des boutons
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        // Afficher le bon contenu et activer le bouton
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // ========== INSCRIPTION ==========
+    function handleRegistration() {
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const company = document.getElementById('company').value;
+        const sector = document.getElementById('sector').value;
+        const password = document.getElementById('password').value;
+        const userEmail = document.getElementById('userEmail').value;
+        
+        // Validation
+        if(!fullName || !email || !company || !sector || !password || !userEmail) {
+            showError('Veuillez remplir tous les champs');
+            return;
+        }
+        
+        if(password.length < 8) {
+            showError('Le mot de passe doit faire au moins 8 caractères');
+            return;
+        }
+        
+        // Sauvegarder les données (localStorage)
+        const userData = {
+            fullName,
+            email,
+            company,
+            sector,
+            userEmail,
+            registrationDate: new Date().toLocaleDateString('fr-FR')
+        };
+        
+        localStorage.setItem('comorea_user', JSON.stringify(userData));
+        
+        // Envoyer l'email de confirmation
+        sendConfirmationEmail(fullName, userEmail, email, company);
+        
+        // Afficher message de succès
+        const successMsg = document.getElementById('successMsg');
+        successMsg.innerHTML = `✓ Bienvenue <strong>${fullName}</strong> ! Votre compte a été créé avec succès. Un email de confirmation a été envoyé à <strong>${userEmail}</strong>. Vous pouvez maintenant utiliser le calculateur.`;
+        successMsg.classList.add('show');
+        
+        // Réinitialiser le formulaire
+        document.getElementById('fullName').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('company').value = '';
+        document.getElementById('sector').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('userEmail').value = '';
+        
+        // Rediriger vers le calculateur après 3 secondes
+        setTimeout(() => {
+            document.querySelector('[onclick="switchTab(event, \'calcul\')"]').click();
+            successMsg.classList.remove('show');
+        }, 3000);
+    }
+
+    function sendConfirmationEmail(fullName, userEmail, professionalEmail, company) {
+        const confirmationContent = `Bonjour ${fullName},
+
+Bienvenue sur COMOREA ! 🎉
+
+Votre inscription a été effectuée avec succès.
+
+═══════════════════════════════════════════════════════════
+DÉTAILS DE VOTRE COMPTE
+═══════════════════════════════════════════════════════════
+
+Nom: ${fullName}
+Email Professionnel: ${professionalEmail}
+Entreprise: ${company}
+Email Personnel: ${userEmail}
+Date d'Inscription: ${new Date().toLocaleDateString('fr-FR')}
+
+═══════════════════════════════════════════════════════════
+
+Vous avez accès à :
+✓ Calculateur de Prix de Transfert
+✓ 3 Méthodes de Calcul (Cost Plus, Resale Price, Profit Split)
+✓ Envoi des Résultats par Email
+✓ Guide Complet et Glossaire Fiscal
+
+Comment utiliser l'outil :
+1. Accédez à l'onglet "Calculateur"
+2. Entrez le coût de production et la marge
+3. Sélectionnez la méthode de calcul
+4. Cliquez sur "Calculer"
+5. Envoyez les résultats par email
+
+Besoin d'aide ? Consultez le guide dans l'onglet "Guide".
+
+Cordialement,
+L'équipe COMOREA`;
+
+        const formData = new FormData();
+        formData.append('email', userEmail);
+        formData.append('message', confirmationContent);
+        formData.append('_captcha', 'false');
+        
+        fetch('https://formsubmit.co/paul178paul@gmail.com', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Email envoyé avec succès à ' + userEmail);
+        })
+        .catch(error => {
+            console.log('Erreur lors de l\'envoi de l\'email');
+        });
+    }
+
+    function showError(message) {
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.innerHTML = `⚠ ${message}`;
+        errorMsg.classList.add('show');
+        setTimeout(() => errorMsg.classList.remove('show'), 4000);
+    }
+
+    // ========== CALCULATEUR ==========
+    function calculate() {
+        const cost = parseFloat(document.getElementById('cost').value);
+        const margin = parseFloat(document.getElementById('margin').value);
+        const method = document.getElementById('method').value;
+        
+        if(isNaN(cost) || isNaN(margin) || cost < 0 || margin < 0) {
+            showError('Veuillez entrer des valeurs valides');
+            return;
+        }
+        
+        let transferPrice = 0;
+        let methodName = '';
+        let calculation = '';
+        
+        switch(method) {
+            case 'cost-plus':
+                transferPrice = cost * (1 + margin/100);
+                methodName = 'Cost Plus (Coût Plus)';
+                calculation = `${cost}€ × (1 + ${margin}%) = ${transferPrice.toFixed(2)}€`;
+                break;
+            case 'resale':
+                transferPrice = cost / (1 - margin/100);
+                methodName = 'Resale Price (Prix Revente)';
+                calculation = `${cost}€ ÷ (1 - ${margin}%) = ${transferPrice.toFixed(2)}€`;
+                break;
+            case 'profit-split':
+                transferPrice = cost * (1 + margin/200);
+                methodName = 'Profit Split (Partage)';
+                calculation = `${cost}€ × (1 + ${margin}% ÷ 2) = ${transferPrice.toFixed(2)}€`;
+                break;
+        }
+        
+        const markup = transferPrice - cost;
+        const marginActual = ((transferPrice - cost) / cost * 100).toFixed(2);
+        
+        // Afficher le résultat
+        document.getElementById('priceValue').textContent = transferPrice.toFixed(2) + '€';
+        document.getElementById('resultDetails').innerHTML = `
+            <div><strong>Méthode :</strong> ${methodName}</div>
+            <div><strong>Coût Initial :</strong> ${cost.toFixed(2)}€</div>
+            <div><strong>Marge Demandée :</strong> ${margin}%</div>
+            <div><strong>Marge Réelle :</strong> ${marginActual}%</div>
+            <div><strong>Bénéfice Brut :</strong> ${markup.toFixed(2)}€</div>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,245,255,0.2);">
+                <strong>Calcul :</strong> ${calculation}
+            </div>
+        `;
+        
+        document.getElementById('result').classList.add('show');
+    }
+
+    function resetCalc() {
+        document.getElementById('cost').value = '';
+        document.getElementById('margin').value = '';
+        document.getElementById('method').value = 'cost-plus';
+        document.getElementById('result').classList.remove('show');
+    }
+
+    // ========== ENVOI PAR EMAIL ==========
+    function sendResultsByEmail() {
+        const email = document.getElementById('emailRecipient').value;
+        const priceValue = document.getElementById('priceValue').textContent;
+        
+        if(!email || !priceValue || priceValue === '-') {
+            showError('Veuillez d\'abord calculer un prix de transfert');
+            return;
+        }
+        
+        if(!validateEmail(email)) {
+            showError('Email invalide');
+            return;
+        }
+        
+        const emailStatus = document.getElementById('emailStatus');
+        emailStatus.innerHTML = '⏳ Envoi en cours...';
+        emailStatus.style.color = '#00f5ff';
+        
+        // Récupérer les données de résultat
+        const cost = document.getElementById('cost').value;
+        const margin = document.getElementById('margin').value;
+        const method = document.getElementById('method').value;
+        const user = localStorage.getItem('comorea_user') ? JSON.parse(localStorage.getItem('comorea_user')) : {};
+        
+        // Créer le contenu de l'email
+        const emailContent = `
+Bonjour,
+
+Voici les résultats de votre calcul de prix de transfert via COMOREA.
+
+═══════════════════════════════════════════════════════════
+RÉSUMÉ DU CALCUL
+═══════════════════════════════════════════════════════════
+
+Coût de Production: ${cost}€
+Marge Bénéficiaire: ${margin}%
+Méthode Utilisée: ${getMethodName(method)}
+
+PRIX DE TRANSFERT CALCULÉ: ${priceValue}
+
+═══════════════════════════════════════════════════════════
+
+Informations Utilisateur:
+${user.fullName ? `- Nom: ${user.fullName}` : ''}
+${user.company ? `- Entreprise: ${user.company}` : ''}
+${user.email ? `- Email: ${user.email}` : ''}
+Date du Calcul: ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}
+
+═══════════════════════════════════════════════════════════
+
+📚 RAPPEL DES MÉTHODES:
+- Cost Plus: Ajoute une marge au coût
+- Resale Price: Réduit le prix de revente d'une marge
+- Profit Split: Partage les bénéfices
+
+Consultez notre guide complet sur: https://comorea.example.com
+
+Cordialement,
+L'équipe COMOREA
+        `;
+        
+        // Envoyer via EmailJS (service gratuit)
+        sendEmailViaService(email, emailContent, emailStatus);
+    }
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    function getMethodName(method) {
+        const methods = {
+            'cost-plus': 'Cost Plus (Coût Plus)',
+            'resale': 'Resale Price (Prix Revente)',
+            'profit-split': 'Profit Split (Partage des Bénéfices)'
+        };
+        return methods[method] || method;
+    }
+
+    function sendEmailViaService(recipientEmail, content, statusElement) {
+        // Option 1: Utiliser FormSubmit (service gratuit, pas d'inscription)
+        const formData = new FormData();
+        formData.append('email', recipientEmail);
+        formData.append('message', content);
+        formData.append('_next', window.location.href);
+        formData.append('_captcha', 'false');
+        
+        fetch('https://formsubmit.co/paul178paul@gmail.com', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if(response.ok) {
+                statusElement.innerHTML = '✓ Email envoyé avec succès à ' + recipientEmail;
+                statusElement.style.color = '#22c55e';
+                
+                // Alternative: Copier dans le presse-papiers
+                copyToClipboard(content);
+            } else {
+                throw new Error('Erreur d\'envoi');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            // Plan B: Afficher le contenu à copier manuellement
+            showManualEmailOption(recipientEmail, content, statusElement);
+        });
+    }
+
+    function showManualEmailOption(recipientEmail, content, statusElement) {
+        statusElement.innerHTML = `
+            <div style="background: rgba(139, 92, 246, 0.2); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <strong style="color: #a78bfa;">📧 Copie dans le presse-papiers</strong><br><br>
+                <small>Contenu prêt à copier. Cliquez sur le bouton ci-dessous et collez dans votre email vers: <strong>${recipientEmail}</strong></small><br><br>
+                <button class="btn-secondary" onclick="copyEmailContent()" style="width: 100%; margin-top: 10px;">
+                    📋 Copier le contenu
+                </button>
+            </div>
+        `;
+        statusElement.style.color = '#a78bfa';
+    }
+
+    function copyEmailContent() {
+        const content = document.getElementById('resultDetails').innerText + '\n\n' + new Date().toLocaleDateString('fr-FR');
+        navigator.clipboard.writeText(content).then(() => {
+            alert('✓ Contenu copié! Collez-le dans votre email');
+        }).catch(() => {
+            alert('Impossible de copier automatiquement. Veuillez copier manuellement.');
+        });
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).catch(() => {
+            console.log('Copie échouée');
+        });
+    }
+</script>
+
+</body>
+</html>
